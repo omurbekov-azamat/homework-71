@@ -9,3 +9,11 @@ export interface Dish {
   price: number;
   image: string;
 }
+
+export interface ApiDish extends Dish {
+  id: string;
+}
+
+export interface ApiDishesList {
+  [id: string]: Dish;
+}
