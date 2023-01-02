@@ -6,15 +6,18 @@ import ButtonSpinner from "../Spinner/ButtonSpinner";
 
 interface Props {
   onSubmit: (meal: Dish) => void;
+  existingDish?: DishMutation;
 }
 
-const MainForm: React.FC<Props> = ({onSubmit}) => {
+const initialState: DishMutation = {
+  title: '',
+  price: '',
+  image: '',
+}
+
+const MainForm: React.FC<Props> = ({onSubmit, existingDish = initialState}) => {
   const loading = useAppSelector(selectSendLoading);
-  const [dish, setDish] = useState<DishMutation>({
-    title: '',
-    price: '',
-    image: '',
-  });
+  const [dish, setDish] = useState<DishMutation>(existingDish);
 
   const onDishChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = e.target;
@@ -38,10 +41,11 @@ const MainForm: React.FC<Props> = ({onSubmit}) => {
   return (
     <div className='border border-dark'>
       <form onSubmit={onFormSubmit}>
-        <div className='text-center p-5'>
+        <div className='p-5'>
           <div className='mb-3'>
+            <label htmlFor="title">Title</label>
             <input
-              className='form-control'
+              className='form-control mt-2'
               type="text"
               placeholder='dish'
               id='title'
@@ -51,8 +55,9 @@ const MainForm: React.FC<Props> = ({onSubmit}) => {
             />
           </div>
           <div className='mb-3'>
+            <label htmlFor="price">Price</label>
             <input
-              className='form-control'
+              className='form-control mt-2'
               type="number"
               placeholder='price'
               id='price'
@@ -62,8 +67,9 @@ const MainForm: React.FC<Props> = ({onSubmit}) => {
             />
           </div>
           <div className='mb-3'>
+            <label htmlFor="image">Image</label>
             <input
-              className='form-control'
+              className='form-control mt-2'
               type="text"
               placeholder='image'
               id='image'
@@ -72,14 +78,16 @@ const MainForm: React.FC<Props> = ({onSubmit}) => {
               onChange={onDishChange}
             />
           </div>
-          <button
-            type='submit'
-            className='btn btn-primary'
-            disabled={loading}
-          >
-            {loading && <ButtonSpinner/>}
-            save
-          </button>
+          <div className='text-center'>
+            <button
+              type='submit'
+              className='btn btn-primary'
+              disabled={loading}
+            >
+              {loading && <ButtonSpinner/>}
+              save
+            </button>
+          </div>
         </div>
       </form>
     </div>
