@@ -1,10 +1,11 @@
 import React, {useEffect} from 'react';
 import {NavLink} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "../../app/hook";
-import {resetDish, selectDishes, selectFetchDishesLoading, selectOrderDishes} from "../../store/dishesSlice";
+import {resetDish, showCheckOrder, selectDishes, selectFetchDishesLoading, selectOrderDishes} from "../../store/dishesSlice";
 import {fetchDishes} from "../../store/dishesThunks";
 import Spinner from "../../components/Spinner/Spinner";
 import DishItemForUser from "../../components/Dishes/DishItemForUser";
+import Modal from "../../components/Modal/Modal";
 
 const Home = () => {
   const dispatch = useAppDispatch();
@@ -30,7 +31,12 @@ const Home = () => {
     order = (
         <div className="alert alert-primary d-flex justify-content-between">
           Order is total: {total} kgs
-          <button className='btn btn-outline-dark'>Checkout</button>
+          <button
+            className='btn btn-outline-dark'
+            onClick={() => dispatch(showCheckOrder())}
+          >
+            Checkout
+          </button>
         </div>
     )
   }
@@ -50,6 +56,7 @@ const Home = () => {
           />
         ))}
         {order}
+        <Modal/>
       </div>
     </>
   );

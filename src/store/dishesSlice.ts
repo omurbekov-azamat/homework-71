@@ -11,6 +11,7 @@ interface DishesState {
   fetchOneDishLoading: boolean;
   deleteLoading: false | string;
   orderDishes: OrderDish[];
+  showCheckOrder: boolean;
 }
 const initialState: DishesState = {
   items: [],
@@ -20,6 +21,7 @@ const initialState: DishesState = {
   fetchOneDishLoading: false,
   deleteLoading: false,
   orderDishes: [],
+  showCheckOrder: false,
 }
 
 export const dishesSlice = createSlice({
@@ -39,6 +41,12 @@ export const dishesSlice = createSlice({
     },
     resetDish: (state) => {
       state.orderDishes = [];
+    },
+    showCheckOrder: (state) => {
+      state.showCheckOrder = true;
+    },
+    closeCheckOrder: (state) => {
+      state.showCheckOrder = false;
     },
   },
   extraReducers: (builder) => {
@@ -94,7 +102,7 @@ export const dishesSlice = createSlice({
 });
 
 export const dishesReducer = dishesSlice.reducer;
-export const {addDish, resetDish} = dishesSlice.actions;
+export const {addDish, resetDish, showCheckOrder, closeCheckOrder} = dishesSlice.actions;
 export const selectSendLoading = (state: RootState) => state.dishes.createLoading;
 export const selectFetchDishesLoading = (state: RootState) => state.dishes.fetchDishesLoading;
 export const selectDishes = (state: RootState) => state.dishes.items;
@@ -102,3 +110,4 @@ export const selectOneDish = (state: RootState) => state.dishes.oneDish;
 export const selectDeleteLoading = (state: RootState) => state.dishes.deleteLoading;
 export const selectFetchOneDishLoading = (state: RootState) => state.dishes.fetchOneDishLoading;
 export const selectOrderDishes = (state: RootState) => state.dishes.orderDishes;
+export const selectCheckOrder = (state: RootState) => state.dishes.showCheckOrder;
