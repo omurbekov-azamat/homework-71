@@ -17,3 +17,8 @@ export interface ApiDish extends Dish {
 export interface ApiDishesList {
   [id: string]: Dish;
 }
+
+export interface OrderDish {
+  dish: ApiDish;
+  amount: number;
+}

@@ -5,10 +5,12 @@ import Dishes from "./containers/Dishes/Dishes";
 import Orders from "./containers/Orders/Orders";
 import NewDish from "./containers/NewDish/NewDish";
 import EditDish from "./containers/EditDish/EditDish";
+import Home from "./containers/Home/Home";
 
 function App() {
   return (
     <Routes>
+      <Route path='/' element={<Home/>}/>
       <Route path='/admin' element={<MainAdmin/>}>
         <Route path='/admin' element={<Dishes/>}/>
         <Route path='/admin/dishes' element={<Dishes/>}/>

@@ -1,7 +1,7 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {createDish, deleteDish, fetchDishes, fetchOneDish, updateDish} from "./dishesThunks";
 import {RootState} from "../app/store";
-import {ApiDish} from "../types";
+import {ApiDish, OrderDish} from "../types";
 
 interface DishesState {
   items: ApiDish[];
@@ -10,6 +10,7 @@ interface DishesState {
   oneDish: null | ApiDish;
   fetchOneDishLoading: boolean;
   deleteLoading: false | string;
+  orderDishes: OrderDish[];
 }
 const initialState: DishesState = {
   items: [],
@@ -18,12 +19,28 @@ const initialState: DishesState = {
   oneDish: null,
   fetchOneDishLoading: false,
   deleteLoading: false,
+  orderDishes: [],
 }
 
 export const dishesSlice = createSlice({
   name: 'dishes',
   initialState,
-  reducers: {},
+  reducers: {
+    addDish: (state, {payload: dish}: PayloadAction<ApiDish>) => {
+      const existingIndex = state.orderDishes.findIndex(item => {
+        return item.dish.id === dish.id;
+      });
+
+      if (existingIndex !== -1) {
+        state.orderDishes[existingIndex].amount++;
+      } else {
+        state.orderDishes.push({dish, amount: 1});
+      }
+    },
+    resetDish: (state) => {
+      state.orderDishes = [];
+    },
+  },
   extraReducers: (builder) => {
    builder.addCase(createDish.pending, (state) => {
      state.createLoading = true;
@@ -77,9 +94,11 @@ export const dishesSlice = createSlice({
 });
 
 export const dishesReducer = dishesSlice.reducer;
+export const {addDish, resetDish} = dishesSlice.actions;
 export const selectSendLoading = (state: RootState) => state.dishes.createLoading;
 export const selectFetchDishesLoading = (state: RootState) => state.dishes.fetchDishesLoading;
 export const selectDishes = (state: RootState) => state.dishes.items;
 export const selectOneDish = (state: RootState) => state.dishes.oneDish;
 export const selectDeleteLoading = (state: RootState) => state.dishes.deleteLoading;
 export const selectFetchOneDishLoading = (state: RootState) => state.dishes.fetchOneDishLoading;
+export const selectOrderDishes = (state: RootState) => state.dishes.orderDishes;
