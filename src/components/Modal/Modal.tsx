@@ -1,10 +1,19 @@
 import React from 'react';
 import Backdrop from "../Backdrop/Backdrop";
 import {useAppDispatch, useAppSelector} from "../../app/hook";
-import {closeCheckOrder, selectCheckOrder, selectOrderDishes} from "../../store/dishesSlice";
+import {
+  closeCheckOrder,
+  deleteOneOrder,
+  selectCheckOrder,
+  selectOrderDishes,
+  selectSendLoading
+} from "../../store/dishesSlice";
+import {sendOrderToApi} from "../../store/dishesThunks";
+import ButtonSpinner from "../Spinner/ButtonSpinner";
 
 const Modal = () => {
   const orderDishes = useAppSelector(selectOrderDishes);
+  const loading = useAppSelector(selectSendLoading);
   const showModal = useAppSelector(selectCheckOrder);
   const dispatch = useAppDispatch();
 
@@ -12,9 +21,17 @@ const Modal = () => {
     dispatch(closeCheckOrder());
   };
 
+  const deleteOrder = (id: string) => {
+    dispatch(deleteOneOrder(id));
+  };
+
   const total = orderDishes.reduce((sum, order) => {
     return sum + order.amount * order.dish.price;
   }, 150);
+
+  const sendOrder = async () => {
+    await dispatch(sendOrderToApi());
+  };
 
   return (
     <>
@@ -36,19 +53,28 @@ const Modal = () => {
                   <p className='text-capitalize'>{item.dish.title} x {item.amount}</p>
                   <div className='d-flex flex-row align-items-center'>
                     <p className='m-0'>{item.dish.price * item.amount} kgs</p>
-                    <button className='ms-3 btn btn-danger'>Delete</button>
+                    <button onClick={() => deleteOrder(item.dish.id)} className='ms-3 btn btn-danger'>Delete</button>
                   </div>
                 </div>
               ))}
-              <div className='p-2'>Delivery 150kgs</div>
-              <div className='p-2'>Total: {total}</div>
+              <div className='p-2'>Delivery 150 kgs</div>
+              <div className='p-2'>Total: {total} kgs</div>
             </div>
             <div className='text-center mb-3'>
               <button
-                className='btn btn-primary'
+                className='btn btn-primary me-3'
                 onClick={close}
+                disabled={loading}
               >
-                close
+                Cancel
+              </button>
+              <button
+                className='btn btn-success'
+                onClick={sendOrder}
+                disabled={loading}
+              >
+                {loading && <ButtonSpinner/>}
+                Order
               </button>
             </div>
           </div>

@@ -1,7 +1,7 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import axiosApi from "../axiosApi";
 import {ApiDish, ApiDishesList, Dish} from "../types";
-import {AppDispatch} from "../app/store";
+import {AppDispatch, RootState} from "../app/store";
 
 export const createDish = createAsyncThunk<void, Dish>(
   'dishes/create',
@@ -62,5 +62,24 @@ export const deleteDish = createAsyncThunk<void, string, {dispatch: AppDispatch}
   async (id, thunkAPI) => {
     await axiosApi.delete('/meals/' + id + '.json');
     thunkAPI.dispatch(fetchDishes());
+  }
+);
+
+export const sendOrderToApi = createAsyncThunk<void, undefined, {state: RootState}>(
+  'dishes/newOrder',
+  async (arg, thunkAPI) => {
+    const orders = thunkAPI.getState().dishes.orderDishes;
+
+    const newOrders = orders.map((item) => {
+      return {
+        [item.dish.id]: item.amount,
+      }
+    });
+
+    const order = {
+      ordersMeals: newOrders,
+    };
+
+    await axiosApi.post('/bookings.json', order);
   }
 );

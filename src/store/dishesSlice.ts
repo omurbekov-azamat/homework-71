@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {createDish, deleteDish, fetchDishes, fetchOneDish, updateDish} from "./dishesThunks";
+import {createDish, deleteDish, fetchDishes, fetchOneDish, sendOrderToApi, updateDish} from "./dishesThunks";
 import {RootState} from "../app/store";
 import {ApiDish, OrderDish} from "../types";
 
@@ -47,6 +47,9 @@ export const dishesSlice = createSlice({
     },
     closeCheckOrder: (state) => {
       state.showCheckOrder = false;
+    },
+    deleteOneOrder: (state, {payload: id}: PayloadAction<string>) => {
+      state.orderDishes = state.orderDishes.filter(n => n.dish.id !== id);
     },
   },
   extraReducers: (builder) => {
@@ -98,11 +101,24 @@ export const dishesSlice = createSlice({
     builder.addCase(deleteDish.rejected, (state) => {
       state.deleteLoading = false;
     });
+    builder.addCase(sendOrderToApi.pending, (state) => {
+      state.createLoading = true;
+      state.showCheckOrder = true;
+    });
+    builder.addCase(sendOrderToApi.fulfilled, (state) => {
+      state.orderDishes = [];
+      state.createLoading = false;
+      state.showCheckOrder = false;
+    });
+    builder.addCase(sendOrderToApi.rejected, (state) => {
+      state.showCheckOrder = false;
+      state.createLoading = false;
+    });
   },
 });
 
 export const dishesReducer = dishesSlice.reducer;
-export const {addDish, resetDish, showCheckOrder, closeCheckOrder} = dishesSlice.actions;
+export const {addDish, resetDish, showCheckOrder, closeCheckOrder, deleteOneOrder} = dishesSlice.actions;
 export const selectSendLoading = (state: RootState) => state.dishes.createLoading;
 export const selectFetchDishesLoading = (state: RootState) => state.dishes.fetchDishesLoading;
 export const selectDishes = (state: RootState) => state.dishes.items;
