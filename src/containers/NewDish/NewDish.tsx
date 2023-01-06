@@ -1,9 +1,9 @@
 import React from 'react';
-import MainForm from "../../components/MainForm/MainForm";
 import {Dish} from "../../types";
 import {useAppDispatch} from "../../app/hook";
 import {createDish} from "../../store/dishesThunks";
 import {useNavigate} from "react-router-dom";
+import MainForm from "../../components/MainForm/MainForm";
 
 const NewDish = () => {
   const dispatch = useAppDispatch();

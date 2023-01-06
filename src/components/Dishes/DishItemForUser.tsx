@@ -20,7 +20,11 @@ const DishItemForUser: React.FC<Props> = ({dish}) => {
       onClick={addToOrder}
     >
       <div className='d-flex align-items-center'>
-        <img src={dish.image} alt={dish.title} style={{width: '100px', height: '100px'}}/>
+        <img
+          src={dish.image}
+          alt={dish.title}
+          style={{width: '100px', height: '100px'}}
+        />
         <p className='ms-3 text-capitalize'>{dish.title}</p>
       </div>
         <p className='me-3 text-capitalize m-0'>price: {dish.price} som</p>

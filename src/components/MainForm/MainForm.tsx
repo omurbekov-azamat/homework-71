@@ -37,7 +37,6 @@ const MainForm: React.FC<Props> = ({onSubmit, existingDish = initialState}) => {
     });
   };
 
-
   return (
     <div className='border border-dark'>
       <form onSubmit={onFormSubmit}>

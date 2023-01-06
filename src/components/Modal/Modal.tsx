@@ -1,6 +1,6 @@
 import React from 'react';
-import Backdrop from "../Backdrop/Backdrop";
 import {useAppDispatch, useAppSelector} from "../../app/hook";
+import {sendOrderToApi} from "../../store/dishesThunks";
 import {
   closeCheckOrder,
   deleteOneOrder,
@@ -8,8 +8,9 @@ import {
   selectOrderDishes,
   selectSendLoading
 } from "../../store/dishesSlice";
-import {sendOrderToApi} from "../../store/dishesThunks";
+import {DELIVERY} from "../../constants";
 import ButtonSpinner from "../Spinner/ButtonSpinner";
+import Backdrop from "../Backdrop/Backdrop";
 
 const Modal = () => {
   const orderDishes = useAppSelector(selectOrderDishes);
@@ -27,7 +28,7 @@ const Modal = () => {
 
   const total = orderDishes.reduce((sum, order) => {
     return sum + order.amount * order.dish.price;
-  }, 150);
+  }, DELIVERY);
 
   const sendOrder = async () => {
     await dispatch(sendOrderToApi());
@@ -53,11 +54,16 @@ const Modal = () => {
                   <p className='text-capitalize'>{item.dish.title} x {item.amount}</p>
                   <div className='d-flex flex-row align-items-center'>
                     <p className='m-0'>{item.dish.price * item.amount} kgs</p>
-                    <button onClick={() => deleteOrder(item.dish.id)} className='ms-3 btn btn-danger'>Delete</button>
+                    <button
+                      onClick={() => deleteOrder(item.dish.id)}
+                      className='ms-3 btn btn-danger'
+                    >
+                      Delete
+                    </button>
                   </div>
                 </div>
               ))}
-              <div className='p-2'>Delivery 150 kgs</div>
+            <div className='p-2'>Delivery {DELIVERY} kgs</div>
               <div className='p-2'>Total: {total} kgs</div>
             </div>
             <div className='text-center mb-3'>

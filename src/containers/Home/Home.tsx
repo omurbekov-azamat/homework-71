@@ -45,16 +45,24 @@ const Home = () => {
     <>
       <div className="navbar navbar-expand-sm navbar-dark bg-success mb-3">
         <div className="container">
-          <NavLink to='/' className="navbar-brand" onClick={() => dispatch(resetDish())}>Turtle Pizza</NavLink>
+          <NavLink
+            to='/'
+            className="navbar-brand"
+            onClick={() => dispatch(resetDish())}
+          >
+            Turtle Pizza
+          </NavLink>
         </div>
       </div>
       <div className='container'>
-        {fetchLoading ? <Spinner/> : dishes.map((dish) => (
-          <DishItemForUser
-            dish={dish}
-            key={dish.id}
-          />
-        ))}
+        <div className='overflow-auto' style={{height: '500px'}}>
+          {fetchLoading ? <Spinner/> : dishes.map((dish) => (
+            <DishItemForUser
+              dish={dish}
+              key={dish.id}
+            />
+          ))}
+        </div>
         {order}
         <Modal/>
       </div>

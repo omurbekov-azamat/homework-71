@@ -1,7 +1,16 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {createDish, deleteDish, fetchDishes, fetchOneDish, sendOrderToApi, updateDish} from "./dishesThunks";
+import {
+  completeOrder,
+  createDish,
+  deleteDish,
+  fetchDishes,
+  fetchOneDish,
+  fetchOrders,
+  sendOrderToApi,
+  updateDish
+} from "./dishesThunks";
 import {RootState} from "../app/store";
-import {ApiDish, OrderDish} from "../types";
+import {ApiDish, FixOrdersFromApi, OrderDish} from "../types";
 
 interface DishesState {
   items: ApiDish[];
@@ -12,7 +21,11 @@ interface DishesState {
   deleteLoading: false | string;
   orderDishes: OrderDish[];
   showCheckOrder: boolean;
+  fetchOrdersLoading: boolean;
+  orders: FixOrdersFromApi[];
+  completeOrder: false | string;
 }
+
 const initialState: DishesState = {
   items: [],
   createLoading: false,
@@ -22,6 +35,9 @@ const initialState: DishesState = {
   deleteLoading: false,
   orderDishes: [],
   showCheckOrder: false,
+  fetchOrdersLoading: false,
+  orders: [],
+  completeOrder: false,
 }
 
 export const dishesSlice = createSlice({
@@ -114,6 +130,25 @@ export const dishesSlice = createSlice({
       state.showCheckOrder = false;
       state.createLoading = false;
     });
+    builder.addCase(fetchOrders.pending, (state) => {
+      state.fetchOrdersLoading = true;
+    });
+    builder.addCase(fetchOrders.fulfilled, (state, {payload: orders}) => {
+      state.fetchOrdersLoading = false;
+      state.orders = orders;
+    });
+    builder.addCase(fetchOrders.rejected, (state) => {
+      state.fetchOrdersLoading = false;
+    });
+    builder.addCase(completeOrder.pending, (state, action) => {
+      state.completeOrder = action.meta.arg;
+    });
+    builder.addCase(completeOrder.fulfilled, (state) => {
+      state.completeOrder = false;
+    });
+    builder.addCase(completeOrder.rejected, (state) => {
+      state.completeOrder = false;
+    });
   },
 });
 
@@ -127,3 +162,6 @@ export const selectDeleteLoading = (state: RootState) => state.dishes.deleteLoad
 export const selectFetchOneDishLoading = (state: RootState) => state.dishes.fetchOneDishLoading;
 export const selectOrderDishes = (state: RootState) => state.dishes.orderDishes;
 export const selectCheckOrder = (state: RootState) => state.dishes.showCheckOrder;
+export const selectOrdersLoadings = (state: RootState) => state.dishes.fetchOrdersLoading;
+export const selectOrders = (state: RootState) => state.dishes.orders;
+export const selectCompleteOrderLoading = (state: RootState) => state.dishes.completeOrder;

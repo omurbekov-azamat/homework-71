@@ -22,3 +22,26 @@ export interface OrderDish {
   dish: ApiDish;
   amount: number;
 }
+
+export interface OrderObject {
+  [id: string]: number;
+}
+
+export interface ApiBookingsList {
+  [id: string]: OrderObject;
+}
+
+export interface GotOrders{
+  [id: string]: number | string;
+}
+
+export interface AboutNewOrder {
+  name: string;
+  amount: number;
+  price: number;
+}
+
+export interface FixOrdersFromApi {
+  id: string,
+  orders: Item[],
+}

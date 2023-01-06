@@ -18,6 +18,7 @@ function App() {
         <Route path='/admin/orders' element={<Orders/>}/>
         <Route path='/admin/edit-dish/:id' element={<EditDish/>}/>
       </Route>
+      <Route path='*' element={<h1>Not found!</h1>}/>
     </Routes>
   );
 }

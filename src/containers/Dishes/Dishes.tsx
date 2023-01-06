@@ -7,7 +7,12 @@ const Dishes = () => {
     <div>
       <div className='d-flex justify-content-between mb-3'>
         Dishes
-        <Link to='/admin/new-dish' className='btn btn-outline-danger'>Add new Dish</Link>
+        <Link
+          to='/admin/new-dish'
+          className='btn btn-outline-danger'
+        >
+          Add new Dish
+        </Link>
       </div>
       <Meals/>
     </div>
